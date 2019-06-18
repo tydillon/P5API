@@ -126,11 +126,13 @@ const populateGallery = (users) => {
                 <div class="card-info-container">
                     <h3 id="name" class="card-name cap">${users[i].name.first} ${users[i].name.last}</h3>
                     <p class="card-text">${users[i].email}</p>
-                    <p class="card-text cap">${users[i].location.city}, ${users[i].location.state}</p>
+                    <p class="card-text cap">${users[i].location.city}</p>
                 </div>
             </div>`
         );//end of gallery append
     };//end of for loop
+    $('body').append(`<button type="button" class="btn" id="show-all">Show All</button>`);
+    $('#show-all').hide();
 };//end of populateGallery function
 
 //Function to create the modals that appear when a user clicks on a card
@@ -151,14 +153,23 @@ const generateModals = (users) => {
                         <p class="modal-text">${phone}</p>
                         <p class="modal-text cap">${users[i].location.street}, ${users[i].location.city}, ${abbrev(users[i].location.state)} ${users[i].location.postcode}</p>
                         <p class="modal-text">Birthday: ${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}</p>
-                        <button type="button" id="decrement"><strong><</strong></button>  
-                        <button type="button" id="increment"><strong>></strong></button>
+                        <button type="button" id="modal-prev" class="modal-prev btn">Prev</button> 
+                        <button type="button" id="modal-next" class="modal-next btn">Next</button>
                     </div>
                 </div>
             </div>`
         );//end of body append   
     };//end of for loop
 };//end of generateModals function
+
+const generateSearchBar = () => {
+    $('.search-container').append(
+        `<form action="#" method="get">
+            <input type="search" id="search-input" class="search-input" placeholder="Search...">
+            <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
+        </form>`
+    )
+}
 
 //Function to run the API call to generate the users
 const generateUsers = (url) => {
@@ -178,7 +189,7 @@ const generateUsers = (url) => {
 
 //runs the API call
 generateUsers('https://randomuser.me/api/?results=12&nat=us');
-
+generateSearchBar();
 
 //Increment and Decrement functions for the modals
 const increment = () => {
@@ -210,10 +221,29 @@ const decrement = () => {
 $(document).on('click', '.card', (e) => {
         let i = $(e.currentTarget).attr('id');
         currInd = i;
-        $(`#modal${i}`).show();
+        $(`#modal${i}`).fadeIn();
 })
 
 //Modal event listeners
-$(document).on('click', '#modal-close-btn', () => {$('.modal-container').hide()})
-$(document).on('click', '#increment', increment)
-$(document).on('click', '#decrement', decrement)
+$(document).on('click', '#modal-close-btn', () => {$('.modal-container').fadeOut()})
+$(document).on('click', '#modal-next', increment)
+$(document).on('click', '#modal-prev', decrement)
+
+//search bar event listener
+$(document).on('click', '#search-submit', () => {
+   let testArray = $('.card-name').toArray();
+   for (let i = 0; i < testArray.length; i++) {
+        if (testArray[i].textContent.toUpperCase().includes($('#search-input').val().toUpperCase())) {
+            $(`#${i}`).fadeIn();
+        } else {
+            $(`#${i}`).fadeOut();
+        }
+   }
+   $('#show-all').fadeIn();
+});
+
+//Listener for the show all button at the bottom of the page
+$(document).on('click', '#show-all', () => {
+    $('#show-all').fadeOut();
+    $('.card').fadeIn();
+})
