@@ -44,15 +44,13 @@ const populateGallery = () => {
 };
 populateGallery();
 
-$gallery.on('click', (e) => {
-    if ($(e.target).hasClass( "card" )){
-        let i = $(e.target).attr('id')
-        $(`#modal${i}`).show()
-    }
-});
-
 //Because element was added dynamically, needed to target the document
 //https://stackoverflow.com/questions/34896106/attach-event-to-dynamic-elements-in-javascript
+$(document).on('click', '.card', (e) =>{
+        let i = $(e.currentTarget).attr('id')
+        $(`#modal${i}`).show()
+})
+
 $(document).on('click','#modal-close-btn',function(){
     $('.modal-container').hide()
 })
