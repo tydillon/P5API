@@ -162,6 +162,7 @@ const generateModals = (users) => {
     };//end of for loop
 };//end of generateModals function
 
+//creates the searchbar
 const generateSearchBar = () => {
     $('.search-container').append(
         `<form action="#" method="get">
@@ -170,26 +171,6 @@ const generateSearchBar = () => {
         </form>`
     )
 }
-
-//Function to run the API call to generate the users
-const generateUsers = (url) => {
-    //API request: grabs random users
-    fetch(url)
-        .then(res => res.json())
-        .then(data => {
-            let userData = data.results;
-            dataLength = userData.length;
-            //generates the cards
-            populateGallery(userData);
-            //generates and hides the modals
-            generateModals(userData);
-            $('.modal-container').hide();   
-        });//end of then statement
-};//end of generateUsers function
-
-//runs the API call
-generateUsers('https://randomuser.me/api/?results=12&nat=us');
-generateSearchBar();
 
 //Increment and Decrement functions for the modals
 const increment = () => {
@@ -213,9 +194,30 @@ const decrement = () => {
     $(`#modal${currInd}`).show();
 }
 
+//Function to run the API call to generate the users
+const generateUsers = (url) => {
+    //API request: grabs random users
+    fetch(url)
+        .then(res => res.json())
+        .then(data => {
+            let userData = data.results;
+            dataLength = userData.length;
+            //generates the cards
+            populateGallery(userData);
+            //generates and hides the modals
+            generateModals(userData);
+            $('.modal-container').hide();   
+        });//end of then statement
+};//end of generateUsers function
+
+//runs the API call
+generateUsers('https://randomuser.me/api/?results=12&nat=us');
+//generates the searchbar
+generateSearchBar();
+
 //Event listeners
 //Because elements were added dynamically, needed to target the document rather than the individual elements
-//https://stackoverflow.com/questions/34896106/attach-event-to-dynamic-elements-in-javascript
+//adapted from https://stackoverflow.com/questions/34896106/attach-event-to-dynamic-elements-in-javascript
 
 //Targets the cards. When clicked, shows modal
 $(document).on('click', '.card', (e) => {
