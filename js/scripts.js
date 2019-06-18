@@ -51,7 +51,8 @@ $gallery.on('click', (e) => {
     }
 });
 
+//Because element was added dynamically, needed to target the document
+//https://stackoverflow.com/questions/34896106/attach-event-to-dynamic-elements-in-javascript
 $(document).on('click','#modal-close-btn',function(){
-    console.log('check')
     $('.modal-container').hide()
 })
